@@ -1,0 +1,1 @@
+sh ./postgres/db_initialization.sh
