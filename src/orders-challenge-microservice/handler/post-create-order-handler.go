@@ -27,6 +27,13 @@ func NewPostCreateOrderHandler() PostCreateOrderHandler {
 	}
 }
 
+func NewPostCreateOrderHandlerWithParams(orderRepository repository.OrderRepository) PostCreateOrderHandler {
+	return PostCreateOrderHandlerImpl{
+		orderRepository: orderRepository,
+		logger:          utils.GetLogger(),
+	}
+}
+
 func (pcohi PostCreateOrderHandlerImpl) HandlePostCreateOrderRequest(context *gin.Context) {
 	pcohi.logger.Info("Starting to create order.")
 	clientId, err := pcohi.getClientIdFromInputData(context)

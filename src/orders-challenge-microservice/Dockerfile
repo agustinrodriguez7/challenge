@@ -7,10 +7,8 @@ COPY go.sum ./
 RUN go mod download
 
 COPY *.go ./
-
-RUN go mod tidy
-
-RUN go  build
+RUN go env -w GOPRIVATE=github.com/agustinrodriguez7
+RUN go build
 
 EXPOSE 8080
 

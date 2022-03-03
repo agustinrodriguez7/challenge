@@ -31,6 +31,13 @@ func NewPostApiCartProductsHandler() PostAddProductsCartHandler {
 	}
 }
 
+func NewPostApiCartProductsHandlerWithParams(cartRepository repository.CartRepository) PostAddProductsCartHandler {
+	return PostAddProductsCartImpl{
+		cartRepository: cartRepository,
+		logger:         utils.GetLogger(),
+	}
+}
+
 func (papci PostAddProductsCartImpl) HandlePostAddProductsCartRequest(context *gin.Context) {
 	papci.logger.Info("Starting to add product.")
 	productId, clientId, err := papci.getProductIdAndClientIdFromInputData(context)
@@ -44,7 +51,7 @@ func (papci PostAddProductsCartImpl) HandlePostAddProductsCartRequest(context *g
 		papci.logger.
 			Errorf("Failed trying to add product: %+v to cart to the client: %+v with error: %+v, and message: %+v ",
 				*productId, *clientId, err, err.Error())
-		context.AbortWithStatus(http.StatusConflict)
+		context.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
 	context.Status(http.StatusOK)

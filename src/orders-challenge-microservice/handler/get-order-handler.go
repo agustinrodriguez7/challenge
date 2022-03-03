@@ -31,6 +31,13 @@ func NewGetOrderHandler() GetOrderHandler {
 	}
 }
 
+func NewGetOrderHandlerWithParams(orderRepository repository.OrderRepository) GetOrderHandler {
+	return GetOrderHandlerImpl{
+		orderRepository: orderRepository,
+		logger:          utils.GetLogger(),
+	}
+}
+
 func (gohi GetOrderHandlerImpl) HandleGetOrderRequest(context *gin.Context) {
 	gohi.logger.Info("Starting to get order.")
 	resp := response.GetOrderResponse{}

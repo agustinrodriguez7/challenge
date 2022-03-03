@@ -21,6 +21,13 @@ type (
 	}
 )
 
+func NewGetApiCartHandlerWithParams(cartRepository repository.CartRepository) GetCartHandler {
+	return GetCartHandlerImpl{
+		cartRepository: cartRepository,
+		logger:         utils.GetLogger(),
+	}
+}
+
 func NewGetApiCartHandler() GetCartHandler {
 	return GetCartHandlerImpl{
 		cartRepository: repository.NewCartRepositoryImpl(),
@@ -32,6 +39,11 @@ func (gchi GetCartHandlerImpl) HandleGetCartRequest(context *gin.Context) {
 	gchi.logger.Info("Starting to get cart.")
 	resp := response.GetCartResponse{}
 	clientId, err := gchi.getClientIdFromInputData(context)
+
+	if err != nil {
+		context.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
 
 	products, err := gchi.cartRepository.GetCart(*clientId)
 	if err != nil {

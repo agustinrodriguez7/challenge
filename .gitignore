@@ -1,2 +1,2 @@
 *.idea
-infra/postgres/pgdata
+./infra/postgres/pgdata
