@@ -80,14 +80,7 @@ func (ori OrderRepositoryImpl) CreateOrder(clientId int) (*int64, error) {
 	}
 
 	deleteProductsCartsQuery := fmt.Sprintf(os.Getenv(DELETE_PRODUCTS_CARTS_QUERY), clientId)
-	deleteResult, err := client.Exec(deleteProductsCartsQuery)
-	deleteRowsAffected, _ := deleteResult.RowsAffected()
-	if err != nil {
-		//TODO: Loggear avisando, pero no es tan crucial que borre los items de cart
-	}
-	if deleteRowsAffected < 1 {
-		//TODO: Loggear que no se eliminó nada.
-	}
+	client.Exec(deleteProductsCartsQuery)
 
 	return orderId, nil
 }

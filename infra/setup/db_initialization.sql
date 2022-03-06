@@ -1,7 +1,3 @@
--- noinspection SqlNoDataSourceInspectionForFile
-
--- noinspection SqlDialectInspectionForFile
-
 CREATE TABLE CATEGORIES
 (
     Id    SERIAL PRIMARY KEY,
@@ -69,6 +65,7 @@ CREATE TABLE ORDERS
         FOREIGN KEY (ClientId)
             REFERENCES CLIENTS (Id)
 );
+
 CREATE TABLE PRODUCTS_ORDERS
 (
     Id        SERIAL PRIMARY KEY,
@@ -82,6 +79,7 @@ CREATE TABLE PRODUCTS_ORDERS
             REFERENCES ORDERS (Id)
 
 );
+
 --categories
 INSERT INTO CATEGORIES (Label)
 VALUES ('Technology');

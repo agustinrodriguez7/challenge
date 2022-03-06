@@ -31,6 +31,11 @@ services:
       vpcbr:
         ipv4_address: 10.5.0.6
     environment: # Pass environment variables to the service
+      dbHost: "10.5.0.5"
+      dbPort: "5432"
+      dbUser: "dbuser"
+      dbPassword: "admin2021"
+      dbName: "todoapp"
       INSERT_PRODUCT_TO_CART_QUERY: "insert into products_carts (productid, cartid) values ( %+v , (select carts.id from carts, clients where clients.id = carts.clientId and clients.id = %+v ))"
       SELECT_PRODUCTS_FROM_PRODUCTS_CARTS_QUERY: "select products.id, products.categoryId, products.label, products.type, products.downloadUrl, products.weight from products_carts, carts, clients, products where clients.id = carts.clientid and products_carts.cartid = carts.id and products_carts.productid = products.id and clients.id = %+v"
       SELECT_PRODUCTS_FROM_PRODUCTS_ORDERS_QUERY: "select products.id, products.categoryId, products.label, products.type, products.downloadUrl, products.weight from products_orders, orders, clients, products where clients.id = orders.clientid and products_orders.orderid = orders.id and products_orders.productid = products.id and clients.id = %+v and orders.id = %+v"

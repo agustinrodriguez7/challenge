@@ -2,7 +2,10 @@ package repository
 
 import (
 	"database/sql"
+	"errors"
+	"fmt"
 	_ "github.com/lib/pq"
+	"os"
 	"sync"
 )
 
@@ -30,8 +33,18 @@ func (dbci DBClientImpl) GetClient() (*sql.DB, error) {
 
 func getClientInstance() (*sql.DB, error) {
 	once.Do(func() {
-		psqlInfo := "host=localhost port=5432 user=dbuser password=admin2021 dbname=todoapp sslmode=disable" //TODO: env var
-		dbInstance, errorInstance = sql.Open("postgres", psqlInfo)
+		host := os.Getenv("dbHost")
+		port := os.Getenv("dbPort")
+		password := os.Getenv("dbPassword")
+		name := os.Getenv("dbName")
+		user := os.Getenv("dbUser")
+		if host == "" || port == "" || password == "" || name == "" || user == "" {
+			errorInstance = errors.New("database en vars are not populated")
+		} else {
+			psqlInfo := fmt.Sprintf("host=%+v port=%+v user=%+v password=%+v dbname=%+v sslmode=disable",
+				host, port, user, password, name)
+			dbInstance, errorInstance = sql.Open("postgres", psqlInfo)
+		}
 	})
 	return dbInstance, errorInstance
 }

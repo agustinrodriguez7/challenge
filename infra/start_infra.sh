@@ -1,1 +1,2 @@
-sh ./postgres/db_initialization.sh
+cd ./app
+sh ./start_app.sh
