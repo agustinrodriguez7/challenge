@@ -7,6 +7,10 @@
 * This is my first time using docker without any knowledge before, so it can contain some "bad practices" or mistakes.
 * Sensible info like usernames, and passwords can be consumed from env vars to make it scalable, portable and more secure.
 *  The algorithm of products insertion is improvable, adding rows named `quantity` to a `products_carts` and `products_orders` table.
+
 ### How to run it?
 * Go to the folder `infra` run the file called `start_infra.sh` and it will create everything.
 * Only in the first time, go the folder `infra/setup` run the file called `db_init.sh`, then copy in the console the lines of the file `db_initialization.sql`, press `enter` and then write `exit`.
+
+
+#### To run it, there is postman collection inside of the folder `docs` 

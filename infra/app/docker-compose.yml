@@ -1,6 +1,5 @@
 version: '3.9'
 
-# Define services
 services:
   db:
     image: "postgres:13"
@@ -18,19 +17,19 @@ services:
 
   # App Service
   app:
-    # Configuration for building the docker image for the service
     build:
-      context: ../../src/orders-challenge-microservice # Use an image built from the specified dockerfile in the current directory.
+      context: ../../src/orders-challenge-microservice
       dockerfile: ../../src/orders-challenge-microservice/Dockerfile
     ports:
-      - "8080:8080" # Forward the exposed port 8080 on the container to port 8080 on the host machine
+      - "8080:8080"
     restart: unless-stopped
     depends_on:
       - db
     networks:
       vpcbr:
         ipv4_address: 10.5.0.6
-    environment: # Pass environment variables to the service
+    environment:
+      port: "8080"
       dbHost: "10.5.0.5"
       dbPort: "5432"
       dbUser: "dbuser"
