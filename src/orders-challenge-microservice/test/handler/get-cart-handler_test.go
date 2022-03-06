@@ -9,7 +9,6 @@ import (
 	"github.com/agustinrodriguez7/vidflex-challenge/src/orders-challenge-microservice/test/helper"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"github.com/stretchr/testify/mock"
 	"net/http"
 )
 
@@ -58,7 +57,7 @@ var _ = Describe("Get Cart Handler Tests", func() {
 
 		It("If query return error != nil should return http internal server error status", func() {
 			cartRepositoryMockInstance.On("GetCart").
-				Return(&dbResponse, errors.New("Something went wron"))
+				Return(&dbResponse, errors.New("Something went wrong"))
 			getCartHandler = handler.NewGetApiCartHandlerWithParams(cartRepositoryMockInstance)
 			context, recorder := helper.CreateGinContextWithRequest("", "", nil, map[string]string{"clientId": "1"}, nil)
 			getCartHandler.HandleGetCartRequest(context)
@@ -88,17 +87,3 @@ var _ = Describe("Get Cart Handler Tests", func() {
 	})
 
 })
-
-type CartRepositoryImplMock struct { //TODO: sacar a otro file
-	mock.Mock
-}
-
-func (crim CartRepositoryImplMock) GetCart(clientInd int) (*[]dbModel.Product, error) {
-	args := crim.Called()
-	return args.Get(0).(*[]dbModel.Product), args.Error(1)
-}
-
-func (crim CartRepositoryImplMock) AddProductToCart(productId, clientId int) error {
-	args := crim.Called()
-	return args.Error(0)
-}

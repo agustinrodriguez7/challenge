@@ -9,7 +9,6 @@ import (
 	"github.com/agustinrodriguez7/vidflex-challenge/src/orders-challenge-microservice/test/helper"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"github.com/stretchr/testify/mock"
 	"net/http"
 )
 
@@ -121,17 +120,3 @@ var _ = Describe("Get Order Handler Tests", func() {
 	})
 
 })
-
-type OrderRepositoryImplMock struct {
-	mock.Mock
-}
-
-func (crim OrderRepositoryImplMock) CreateOrder(clientId int) (*int64, error) {
-	args := crim.Called()
-	return args.Get(0).(*int64), args.Error(1)
-}
-
-func (crim OrderRepositoryImplMock) GetOrder(clientId, orderId int) (*[]dbModel.Product, error) {
-	args := crim.Called()
-	return args.Get(0).(*[]dbModel.Product), args.Error(1)
-}
