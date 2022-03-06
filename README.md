@@ -13,4 +13,4 @@
 * Only in the first time, go the folder `infra/setup` run the file called `db_init.sh`, then copy in the console the lines of the file `db_initialization.sql`, press `enter` and then write `exit`.
 
 
-#### To run it, there is postman collection inside of the folder `docs` 
+#### To test it, there is postman collection inside of the folder `docs` 
