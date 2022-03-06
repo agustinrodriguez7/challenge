@@ -1,0 +1,49 @@
+version: '3.9'
+
+# Define services
+services:
+  db:
+    image: "postgres:13"
+    ports:
+      - "5432:5432"
+    networks:
+      vpcbr:
+        ipv4_address: 10.5.0.5
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=dbuser
+      - POSTGRES_PASSWORD=admin2021
+      - POSTGRES_DB=todoapp
+
+  # App Service
+  app:
+    # Configuration for building the docker image for the service
+    build:
+      context: ../../src/orders-challenge-microservice # Use an image built from the specified dockerfile in the current directory.
+      dockerfile: ../../src/orders-challenge-microservice/Dockerfile
+    ports:
+      - "8080:8080" # Forward the exposed port 8080 on the container to port 8080 on the host machine
+    restart: unless-stopped
+    depends_on:
+      - db
+    networks:
+      vpcbr:
+        ipv4_address: 10.5.0.6
+    environment: # Pass environment variables to the service
+      INSERT_PRODUCT_TO_CART_QUERY: "insert into products_carts (productid, cartid) values ( %+v , (select carts.id from carts, clients where clients.id = carts.clientId and clients.id = %+v ))"
+      SELECT_PRODUCTS_FROM_PRODUCTS_CARTS_QUERY: "select products.id, products.categoryId, products.label, products.type, products.downloadUrl, products.weight from products_carts, carts, clients, products where clients.id = carts.clientid and products_carts.cartid = carts.id and products_carts.productid = products.id and clients.id = %+v"
+      SELECT_PRODUCTS_FROM_PRODUCTS_ORDERS_QUERY: "select products.id, products.categoryId, products.label, products.type, products.downloadUrl, products.weight from products_orders, orders, clients, products where clients.id = orders.clientid and products_orders.orderid = orders.id and products_orders.productid = products.id and clients.id = %+v and orders.id = %+v"
+      INSERT_ORDERS_QUERY: "INSERT INTO ORDERS (clientid) values (%+v)"
+      SELECT_ORDER_ID_QUERY: "SELECT id FROM orders WHERE orders.clientid = %+v ORDER BY id desc"
+      SELECT_PRODUCTS_ID_FROM_PRODUCTS_CARTS_QUERY: "SELECT products.id FROM products_carts, carts, clients, products WHERE carts.clientid = clients.id AND products_carts.cartid = carts.id and products_carts.productId = products.id and clients.id = %+v"
+      INSERT_PRODUCTS_ORDERS_QUERY: "INSERT INTO products_orders (productId, orderId) VALUES (%+v, %+v)"
+      DELETE_PRODUCTS_CARTS_QUERY: "delete from products_carts where products_carts.cartid = (select id from carts where carts.id = %+v)"
+
+networks:
+  vpcbr:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.5.0.0/16
+          gateway: 10.5.0.1
