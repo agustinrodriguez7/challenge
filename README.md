@@ -1,4 +1,4 @@
-# Challenge made for vidflex company
+# Challenge
 
 ### I did this thinking this is just a challenge:
 * I didn't do a high percentage of coverage with unit testing, just the handlers layer.
